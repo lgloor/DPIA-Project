@@ -12,7 +12,8 @@ function get_default_settings() {
         'hide_forgotten_contacts': true,
         'udp_multicast': true,
         'ble': true,
-        'websocket_url': "ws://meet.dmi.unibas.ch:8989"
+        'websocket_url': "ws://meet.dmi.unibas.ch:8989",
+        'geo_location': true
     }
 }
 

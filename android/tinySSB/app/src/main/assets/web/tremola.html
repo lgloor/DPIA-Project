@@ -431,6 +431,14 @@
     <!--  TOGGLES -->
 
     <div class="settings">
+      <div class="settingsText">Send current location with Messages</div>
+      <div style="float: right;"><label class="switch">
+        <input id="geo_location" type="checkbox" onchange="toggle_changed(this);">
+        <span class="slider round"></span></label></div>
+    </div>
+    <hr>
+
+    <div class="settings">
       <div class="settingsText">Connect to Peers via BLE</div>
       <div style="float: right;"><label class="switch">
         <input id="ble" type="checkbox" onchange="toggle_changed(this);">
