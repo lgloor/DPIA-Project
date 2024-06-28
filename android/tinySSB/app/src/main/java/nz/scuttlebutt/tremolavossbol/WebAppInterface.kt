@@ -245,6 +245,8 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
                     "udp_multicast" -> {act.settings!!.setUdpMulticastEnabled(args[2].toBooleanStrict())}
                     "websocket" -> {act.settings!!.setWebsocketEnabled(args[2].toBooleanStrict())}
                     "websocket_url" -> {act.settings!!.setWebsocketUrl(args[2])}
+                    //similar setup like upd_multicast, uncertain if this is prefered implementation
+                    "geo_location" -> {act.settings!!.setGeoLocationEnabled(args[2].toBooleanStrict())}
                 }
             }
             else -> {

@@ -324,6 +324,12 @@ function play_voice(nm, ref) {
     backend("play:voice " + p["voice"] + " " + btoa(fid2display(p["from"])) + " " + btoa(d));
 }
 
+function show_geo_location() {
+//    var win = window.open("https://maps.app.goo.gl/Z7WWLG8UTAnfyJpb7", '_blank');
+    var win = window.open("https://plus.codes/8FV9HH6P+3W", '_blank');
+    win.focus();
+}
+
 function new_image_post() {
     if (curr_img_candidate == null) {
         return;
@@ -348,10 +354,14 @@ function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group 
     var box = "<div class=light style='padding: 3pt; border-radius: 4px; box-shadow: 0 0 5px rgba(0,0,0,0.7); word-break: break-word;'"
     if (p.voice != null)
         box += " onclick='play_voice(\"" + curr_chat + "\", \"" + p.key + "\");'";
+    if (true) //(text abfragen ob goelocation drin ist start vom text 0= pfx geo) NOT compatible with voice, can only have ONE onclick action, ondblclick is compatible, but will not be called on voice messages
+        box += " ondblclick='show_geo_location();'";  //TODO: GEO_LOCATION VARIABLE
     box += ">"
     // console.log("box=", box);
     if (is_other)
         box += "<font size=-1><i>" + fid2display(p["from"]) + "</i></font><br>";
+    if  (true)//(p.geo_location != null)
+        box += "<font size=-4><i>" + "this message contains geolocation" + "</i></font><br>";
     var txt = ""
     if (p["body"] != null) {
         txt = escapeHTML(p["body"]).replace(/\n/g, "<br>\n");

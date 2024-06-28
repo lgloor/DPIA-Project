@@ -12,6 +12,7 @@ class Settings(val context: MainActivity) {
     private val WEBSOCKET_ENABLED_BY_DEFAULT = true
     private val BLE_ENABLED_BY_DEFAULT = true
     private val UDP_MULTICAST_ENABLED_BY_DEFAULT = true
+    private val GEO_LOCATION_ENABLED_BY_DEFAULT = true
 
     private val PREVIEW_ENABLED_BY_DEFAULT = false
     private val BACKGROUD_MAP_ENABLED_BY_DEFAULT = false
@@ -74,6 +75,10 @@ class Settings(val context: MainActivity) {
         return  sharedPreferences.getBoolean("udp_multicast", UDP_MULTICAST_ENABLED_BY_DEFAULT)
     }
 
+    fun isGeoLocationEnabled(): Boolean {
+        return  sharedPreferences.getBoolean("geo_location", GEO_LOCATION_ENABLED_BY_DEFAULT)
+    }
+
     fun isHideForgottenConversationsEnabled(): Boolean {
         return sharedPreferences.getBoolean("hide_forgotten_conv", HIDE_FORGOTTEN_CONVERSATIONS_BY_DEFAULT)
     }
@@ -123,6 +128,14 @@ class Settings(val context: MainActivity) {
         if (!value)
             context.rmSockets()
         context.mkSockets()
+    }
+
+    fun setGeoLocationEnabled(value: Boolean) {
+        put("geo_location", value)
+        if (!value) {
+            //TODO Stop sending location
+        }
+        //TODO start sending location
     }
 
     fun setWebsocketUrl(value: String) {
