@@ -394,7 +394,20 @@ async function sketch_getImage() {
     var compressedBase64 = btoa(String.fromCharCode.apply(null, compressedData));
 
     // We Create a new data URL with the compressed data
-    var shortenedDataURL = 'data:image/png;base64,' + compressedBase64;
+    //add geolocation to message if enabled.
+    var geoLocEnabled;
+    var geoLocEnabledString = Android.isGeoLocationEnabled();
+    if (geoLocEnabledString == "true"){  //check if geolocation is enabled
+        geoLocEnabled = true;
+    } else {
+        geoLocEnabled = false;
+    }
+    var geoLoc = ""
+    if (geoLocEnabled){ //ony add if enabled
+        var plusCode = Android.getCurrentLocationAsPlusCode();
+        geoLoc = "pfx:loc/plus," + plusCode + "|";
+    }
+    var shortenedDataURL = geoLoc + 'data:image/png;base64,' + compressedBase64;
 
 
     return shortenedDataURL

@@ -379,19 +379,25 @@ function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group 
     var is_other = p["from"] != myId;
     var box = "<div class=light style='padding: 3pt; border-radius: 4px; box-shadow: 0 0 5px rgba(0,0,0,0.7); word-break: break-word;'";
     var textOfBody = escapeHTML(p["body"]).replace(/\n/g, "<br>\n");
+    console.log("before splitting", textOfBody)
     // split each message, so that we may access the fields of the message
-    var fieldsOfBody =  textOfBody.split('|');
+    var fieldsOfBody = textOfBody.split(/(\|)/g);
     var geoLocPlusCode = null;
-    // here we check all prefixes that might be in a message
-    if (fieldsOfBody.length > 1){
-        var i = 0;
-        while (i < (fieldsOfBody.length - 1)){
-            var field = fieldsOfBody[i];
+    // here we check all prefixes that might be in a message, it is currently not possible to send a sketch with any prefixes since this completely breaks the sketch because uses the character '|'
+    var i = 0;
+    var otherText = "";
+    while (i < fieldsOfBody.length){
+        var field = fieldsOfBody[i];
+        if (field.startsWith("pfx:loc/plus")){
             var partsOfGeoLoc = field.split(',');
             geoLocPlusCode = partsOfGeoLoc[1];
             i++;
+        } else {
+            otherText += field;
         }
+        i++;
     }
+    console.log("after splitting", otherText)
     if (p.voice != null)
         box += " onclick='play_voice(\"" + curr_chat + "\", \"" + p.key + "\");'";
     if (geoLocPlusCode != null) //NOT compatible with voice, can only have ONE onclick action, ondblclick is compatible, but will not be called on voice messages
@@ -405,7 +411,7 @@ function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group 
     var txt = ""
     //console.log("p.body=", p["body"])
     if (p["body"] != null) {
-        txt = fieldsOfBody[fieldsOfBody.length - 1];
+        txt = otherText;
         // Sketch app
         if (txt.startsWith("data:image/png;base64")) { // check if the string is a data url
                 var compressedBase64 = txt.split(',')[1];
