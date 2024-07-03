@@ -38,30 +38,6 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
     val frontend_frontier = act.getSharedPreferences("frontend_frontier", Context.MODE_PRIVATE)
 
     /**
-     * Retrieves the current geolocation of the Android device and returns it as a JSON-String.
-     */
-    @JavascriptInterface
-    @RequiresPermission(
-        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION],
-    )
-    fun getCurrentLocation(): String {
-        val locationClient = LocationServices.getFusedLocationProviderClient(act)
-        val location = JSONObject()
-
-        locationClient.getCurrentLocation(102, CancellationTokenSource().token)
-            .addOnSuccessListener { fetchedLocation ->
-                 location.put("latitude", fetchedLocation.latitude)
-                 location.put("longitude", fetchedLocation.longitude)
-            }.wait()
-        return location.toString()
-    }
-
-    @JavascriptInterface
-    fun getPlusCodeForCoordinates(latitude: Double, longitude: Double): String {
-        return PlusCodesUtils.encode(latitude, longitude)
-    }
-
-    /**
      * Retrieves the current geolocation of the Android device and returns it as a PlusCode.
      */
     @JavascriptInterface
