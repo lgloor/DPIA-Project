@@ -284,7 +284,12 @@ function new_text_post(s) {
     if (s.length == 0) {
         return;
     }
-    var draft = unicodeStringToTypedArray(document.getElementById('draft').value); // escapeHTML(
+    var geoLoc = ""
+    if (true){ //check if geolocation is enabled
+        var plusCode = Android.getCurrentLocationAsPlusCode()
+        geoLoc = "pfx:loc/plus," + plusCode + "|"
+    }
+    var draft = unicodeStringToTypedArray(geoLoc + document.getElementById('draft').value); // escapeHTML(
     var recps;
     if (curr_chat == "ALL") {
         recps = "ALL";
@@ -363,6 +368,7 @@ function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group 
     if  (true)//(p.geo_location != null)
         box += "<font size=-4><i>" + "this message contains geolocation" + "</i></font><br>";
     var txt = ""
+    //console.log("p.body=", p["body"])
     if (p["body"] != null) {
         txt = escapeHTML(p["body"]).replace(/\n/g, "<br>\n");
         // Sketch app
