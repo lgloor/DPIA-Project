@@ -286,8 +286,8 @@ function new_text_post(s) {
     }
     var geoLoc = ""
     if (true){ //check if geolocation is enabled
-        var plusCode = Android.getCurrentLocationAsPlusCode()
-        geoLoc = "pfx:loc/plus," + plusCode + "|"
+        var plusCode = Android.getCurrentLocationAsPlusCode();
+        geoLoc = "pfx:loc/plus," + plusCode + "|";
     }
     var draft = unicodeStringToTypedArray(geoLoc + document.getElementById('draft').value); // escapeHTML(
     var recps;
@@ -329,9 +329,9 @@ function play_voice(nm, ref) {
     backend("play:voice " + p["voice"] + " " + btoa(fid2display(p["from"])) + " " + btoa(d));
 }
 
-function show_geo_location() {
+function show_geo_location(locPlus) {
 //    var win = window.open("https://maps.app.goo.gl/Z7WWLG8UTAnfyJpb7", '_blank');
-    var win = window.open("https://plus.codes/8FV9HH6P+3W", '_blank');
+    var win = window.open("https://plus.codes/" + locPlus, '_blank');
     win.focus();
 }
 
@@ -356,21 +356,33 @@ function new_image_post() {
 function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group or public)>
     var pl = document.getElementById('lst:posts');
     var is_other = p["from"] != myId;
-    var box = "<div class=light style='padding: 3pt; border-radius: 4px; box-shadow: 0 0 5px rgba(0,0,0,0.7); word-break: break-word;'"
+    var box = "<div class=light style='padding: 3pt; border-radius: 4px; box-shadow: 0 0 5px rgba(0,0,0,0.7); word-break: break-word;'";
+    var textOfBody = escapeHTML(p["body"]).replace(/\n/g, "<br>\n");
+    var fieldsOfBody =  textOfBody.split('|')
+    var geoLocPlusCode = null;
+    if (fieldsOfBody.length > 1){
+        var i = 0;
+        while (i < (fieldsOfBody.length - 1)){
+            var field = fieldsOfBody[i];
+            var partsOfGeoLoc = field.split(',');
+            geoLocPlusCode = partsOfGeoLoc[1];
+            i++;
+        }
+    }
     if (p.voice != null)
         box += " onclick='play_voice(\"" + curr_chat + "\", \"" + p.key + "\");'";
-    if (true) //(text abfragen ob goelocation drin ist start vom text 0= pfx geo) NOT compatible with voice, can only have ONE onclick action, ondblclick is compatible, but will not be called on voice messages
-        box += " ondblclick='show_geo_location();'";  //TODO: GEO_LOCATION VARIABLE
+    if (geoLocPlusCode != null) //(text abfragen ob goelocation drin ist start vom text 0= pfx geo) NOT compatible with voice, can only have ONE onclick action, ondblclick is compatible, but will not be called on voice messages
+        box += " ondblclick='show_geo_location(\"" + geoLocPlusCode + "\");'";
     box += ">"
     // console.log("box=", box);
     if (is_other)
         box += "<font size=-1><i>" + fid2display(p["from"]) + "</i></font><br>";
-    if  (true)//(p.geo_location != null)
+    if  (geoLocPlusCode != null)//(p.geo_location != null)
         box += "<font size=-4><i>" + "this message contains geolocation" + "</i></font><br>";
     var txt = ""
     //console.log("p.body=", p["body"])
     if (p["body"] != null) {
-        txt = escapeHTML(p["body"]).replace(/\n/g, "<br>\n");
+        txt = fieldsOfBody[fieldsOfBody.length - 1];
         // Sketch app
         if (txt.startsWith("data:image/png;base64")) { // check if the string is a data url
                 var compressedBase64 = txt.split(',')[1];
