@@ -27,6 +27,7 @@ import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_TEXTA
 import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_KANBAN
 import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toBase64
 import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toHex
+import nz.scuttlebutt.tremolavossbol.utils.PlusCodesUtils
 import okhttp3.internal.wait
 import org.json.JSONArray
 
@@ -56,6 +57,20 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
                  location.put("longitude", fetchedLocation.longitude)
             }.wait()
         return location.toString()
+    }
+
+    @JavascriptInterface
+    fun getPlusCodeForCoordinates(latitude: Double, longitude: Double): String {
+        return PlusCodesUtils.encode(latitude, longitude)
+    }
+
+    @JavascriptInterface
+    fun getCoordinatesForPlusCode(code: String): String {
+        val (latitude, longitude) = PlusCodesUtils.decode(code)
+        return JSONObject()
+            .put("latitude", latitude)
+            .put("longitude", longitude)
+            .toString()
     }
 
     @JavascriptInterface
