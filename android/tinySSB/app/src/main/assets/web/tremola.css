@@ -101,7 +101,9 @@ textarea {
   left: 50%; /* Center relative to the parent element */
   top: 20%;
   transform: translateX(-50%); /* Shift it back by half its own width */
-  width: 70%; /* Adjust the width as needed */
+  width: auto; /* Adjust the width as needed */
+  max-width: 90%;
+  min-width: 70%;
   background: #fff;
   padding: 0.5em;
   z-index: 10002; /* high z-index */
