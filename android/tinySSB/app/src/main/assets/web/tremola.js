@@ -366,39 +366,40 @@ function copyToClipboard(text) {
 }
 
 function showGeoMenu(plusCode) {
+    closeOverlay()
     console.log("entered showGeoMenu");
-    document.getElementById("menu").style.display = 'initial';
-    document.getElementById("overlay-trans").style.display = 'initial';
     var latLongString = Android.getCoordinatesForPlusCode(plusCode);
     var latLong = JSON.parse(latLongString);
     var LatitudeLongitude = latLong.latitude + " " + latLong.longitude;
     var m = '';
     m += "<button class=menu_item_button ";
-    m += "onclick='copyToClipboard(\"" + plusCode + "\");'>" + plusCode + "</button>";
+    m += "onclick='copyToClipboard(\"" + plusCode + "\");'>" + plusCode + "</button><br> ";
     m += "<button class=menu_item_button ";
-    m += "onclick='copyToClipboard(\"" + LatitudeLongitude + "\");'>Lat: " + latLong.latitude + " Long: " + latLong.longitude + "</button>";
+    m += "onclick='copyToClipboard(\"" + LatitudeLongitude + "\");'>Lat: " + latLong.latitude + " Long: " + latLong.longitude + "</button><br>";
     m += "<button class=menu_item_button ";
     m += "onclick='show_geo_location(\"" + plusCode + "\");'>Show Location</button>";
-    document.getElementById("menu").innerHTML = m;
+    document.getElementById("geo-menu").innerHTML = m;
+    document.getElementById("geo-menu").style.display = 'initial';
+    document.getElementById("overlay-trans").style.display = 'initial';
 }
 
 function showGeoVoiceMenu(plusCode, chat, key) {
     console.log("entered showGeoVoiceMenu");
-    document.getElementById("menu").style.display = 'initial';
-    document.getElementById("overlay-trans").style.display = 'initial';
     var latLongString = Android.getCoordinatesForPlusCode(plusCode);
     var latLong = JSON.parse(latLongString);
     var LatitudeLongitude = latLong.latitude + " " + latLong.longitude;
     var m = '';
     m += "<button class=menu_item_button ";
-    m += "onclick='copyToClipboard(\"" + plusCode + "\");'>" + plusCode + "</button>";
+    m += "onclick='copyToClipboard(\"" + plusCode + "\");'>" + plusCode + "</button><br>";
     m += "<button class=menu_item_button ";
-    m += "onclick='copyToClipboard(\"" + LatitudeLongitude + "\");'>Lat: " + latLong.latitude + " Long: " + latLong.longitude + "</button>";
+    m += "onclick='copyToClipboard(\"" + LatitudeLongitude + "\");'>Lat: " + latLong.latitude + " Long: " + latLong.longitude + "</button><br>";
     m += "<button class=menu_item_button ";
-    m += "onclick='show_geo_location(\"" + plusCode + "\");'>Show Location</button>";
+    m += "onclick='show_geo_location(\"" + plusCode + "\");'>Show Location</button><br>";
     m += "<button class=menu_item_button ";
     m += "onclick='play_voice(\"" + chat + "\", \"" + key + "\");'>Play Voice Message</button>";
-    document.getElementById("menu").innerHTML = m;
+    document.getElementById("geo-menu").innerHTML = m;
+    document.getElementById("geo-menu").style.display = 'initial';
+    document.getElementById("overlay-trans").style.display = 'initial';
 }
 
 function new_image_post() {

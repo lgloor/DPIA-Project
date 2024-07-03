@@ -225,6 +225,7 @@ function menu_settings() {
 
 function closeOverlay() {
     document.getElementById('menu').style.display = 'none';
+    document.getElementById('geo-menu').style.display = 'none';
     document.getElementById('qr-overlay').style.display = 'none';
     document.getElementById('preview-overlay').style.display = 'none';
     document.getElementById('image-overlay').style.display = 'none';
