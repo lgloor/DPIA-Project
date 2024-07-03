@@ -61,18 +61,22 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
         return PlusCodesUtils.encode(latitude, longitude)
     }
 
+    /**
+     * Retrieves the current geolocation of the Android device and returns it as a PlusCode.
+     */
     @JavascriptInterface
     @RequiresPermission(
         anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION],
     )
     fun getCurrentLocationAsPlusCode(): String {
         val locationClient = LocationServices.getFusedLocationProviderClient(act)
-        var plusCode = ""
-        locationClient.getCurrentLocation(102, CancellationTokenSource().token)
-            .addOnSuccessListener { fetchedLocation ->
-                plusCode = PlusCodesUtils.encode(fetchedLocation.latitude, fetchedLocation.longitude)
-            }.wait()
-        return plusCode
+
+        val task = locationClient.getCurrentLocation(102, CancellationTokenSource().token)
+        while (!task.isComplete) {
+            // wait for the task to complete
+        }
+        val location = task.result
+        return PlusCodesUtils.encode(location.latitude, location.longitude)
     }
 
     @JavascriptInterface
