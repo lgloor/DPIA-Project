@@ -284,6 +284,7 @@ function new_text_post(s) {
     if (s.length == 0) {
         return;
     }
+    //add geolocation to message if enabled.
     var geoLoc = ""
     if (true){ //check if geolocation is enabled
         var plusCode = Android.getCurrentLocationAsPlusCode();
@@ -358,8 +359,10 @@ function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group 
     var is_other = p["from"] != myId;
     var box = "<div class=light style='padding: 3pt; border-radius: 4px; box-shadow: 0 0 5px rgba(0,0,0,0.7); word-break: break-word;'";
     var textOfBody = escapeHTML(p["body"]).replace(/\n/g, "<br>\n");
-    var fieldsOfBody =  textOfBody.split('|')
+    // split each message, so that we may access the fields of the message
+    var fieldsOfBody =  textOfBody.split('|');
     var geoLocPlusCode = null;
+    // here we check all prefixes that might be in a message
     if (fieldsOfBody.length > 1){
         var i = 0;
         while (i < (fieldsOfBody.length - 1)){
@@ -371,13 +374,13 @@ function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group 
     }
     if (p.voice != null)
         box += " onclick='play_voice(\"" + curr_chat + "\", \"" + p.key + "\");'";
-    if (geoLocPlusCode != null) //(text abfragen ob goelocation drin ist start vom text 0= pfx geo) NOT compatible with voice, can only have ONE onclick action, ondblclick is compatible, but will not be called on voice messages
+    if (geoLocPlusCode != null) //NOT compatible with voice, can only have ONE onclick action, ondblclick is compatible, but will not be called on voice messages
         box += " ondblclick='show_geo_location(\"" + geoLocPlusCode + "\");'";
     box += ">"
     // console.log("box=", box);
     if (is_other)
         box += "<font size=-1><i>" + fid2display(p["from"]) + "</i></font><br>";
-    if  (geoLocPlusCode != null)//(p.geo_location != null)
+    if  (geoLocPlusCode != null)
         box += "<font size=-4><i>" + "this message contains geolocation" + "</i></font><br>";
     var txt = ""
     //console.log("p.body=", p["body"])
