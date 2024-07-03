@@ -352,8 +352,53 @@ function play_voice(nm, ref) {
 
 function show_geo_location(locPlus) {
 //    var win = window.open("https://maps.app.goo.gl/Z7WWLG8UTAnfyJpb7", '_blank');
+
     var win = window.open("https://plus.codes/" + locPlus, '_blank');
     win.focus();
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        console.log('Text copied to clipboard successfully.');
+    }).catch(err => {
+        console.error('Failed to copy text to clipboard:', err);
+    });
+}
+
+function showGeoMenu(plusCode) {
+    console.log("entered showGeoMenu");
+    document.getElementById("menu").style.display = 'initial';
+    document.getElementById("overlay-trans").style.display = 'initial';
+    var latLongString = Android.getCoordinatesForPlusCode(plusCode);
+    var latLong = JSON.parse(latLongString);
+    var LatitudeLongitude = latLong.latitude + " " + latLong.longitude;
+    var m = '';
+    m += "<button class=menu_item_button ";
+    m += "onclick='copyToClipboard(\"" + plusCode + "\");'>" + plusCode + "</button>";
+    m += "<button class=menu_item_button ";
+    m += "onclick='copyToClipboard(\"" + LatitudeLongitude + "\");'>Lat: " + latLong.latitude + " Long: " + latLong.longitude + "</button>";
+    m += "<button class=menu_item_button ";
+    m += "onclick='show_geo_location(\"" + plusCode + "\");'>Show Location</button>";
+    document.getElementById("menu").innerHTML = m;
+}
+
+function showGeoVoiceMenu(plusCode, chat, key) {
+    console.log("entered showGeoVoiceMenu");
+    document.getElementById("menu").style.display = 'initial';
+    document.getElementById("overlay-trans").style.display = 'initial';
+    var latLongString = Android.getCoordinatesForPlusCode(plusCode);
+    var latLong = JSON.parse(latLongString);
+    var LatitudeLongitude = latLong.latitude + " " + latLong.longitude;
+    var m = '';
+    m += "<button class=menu_item_button ";
+    m += "onclick='copyToClipboard(\"" + plusCode + "\");'>" + plusCode + "</button>";
+    m += "<button class=menu_item_button ";
+    m += "onclick='copyToClipboard(\"" + LatitudeLongitude + "\");'>Lat: " + latLong.latitude + " Long: " + latLong.longitude + "</button>";
+    m += "<button class=menu_item_button ";
+    m += "onclick='show_geo_location(\"" + plusCode + "\");'>Show Location</button>";
+    m += "<button class=menu_item_button ";
+    m += "onclick='play_voice(\"" + chat + "\", \"" + key + "\");'>Play Voice Message</button>";
+    document.getElementById("menu").innerHTML = m;
 }
 
 function new_image_post() {
@@ -379,7 +424,6 @@ function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group 
     var is_other = p["from"] != myId;
     var box = "<div class=light style='padding: 3pt; border-radius: 4px; box-shadow: 0 0 5px rgba(0,0,0,0.7); word-break: break-word;'";
     var textOfBody = escapeHTML(p["body"]).replace(/\n/g, "<br>\n");
-    console.log("before splitting", textOfBody)
     // split each message, so that we may access the fields of the message
     var fieldsOfBody = textOfBody.split(/(\|)/g);
     var geoLocPlusCode = null;
@@ -397,11 +441,12 @@ function load_post_item(p) { // { 'key', 'from', 'when', 'body', 'to' (if group 
         }
         i++;
     }
-    console.log("after splitting", otherText)
-    if (p.voice != null)
+    if ((p.voice != null) && geoLocPlusCode == null)
         box += " onclick='play_voice(\"" + curr_chat + "\", \"" + p.key + "\");'";
-    if (geoLocPlusCode != null) //NOT compatible with voice, can only have ONE onclick action, ondblclick is compatible, but will not be called on voice messages
-        box += " ondblclick='show_geo_location(\"" + geoLocPlusCode + "\");'";
+    if ((geoLocPlusCode != null) && (p.voice == null))
+        box += " onclick='showGeoMenu(\"" + geoLocPlusCode + "\");'";
+    if ((geoLocPlusCode != null) && (p.voice != null))
+        box += " onclick='showGeoVoiceMenu(\"" + geoLocPlusCode + "\",\"" + curr_chat + "\", \"" + p.key + "\");'";
     box += ">"
     // console.log("box=", box);
     if (is_other)
