@@ -65,6 +65,15 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
     }
 
     @JavascriptInterface
+    fun isGeoLocationEnabled(): String {
+        return if (act.settings!!.isGeoLocationEnabled()) {
+            "true"
+        } else {
+            "false"
+        }
+    }
+
+    @JavascriptInterface
     fun onFrontendRequest(s: String) {
         //handle the data captured from webview}
         Log.d("FrontendRequest", s)
