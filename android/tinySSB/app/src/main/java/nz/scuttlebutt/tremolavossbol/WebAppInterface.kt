@@ -1,5 +1,6 @@
 package nz.scuttlebutt.tremolavossbol
 
+
 import android.Manifest
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -14,22 +15,19 @@ import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.zxing.integration.android.IntentIntegrator
-import org.json.JSONObject
-
-
 import nz.scuttlebutt.tremolavossbol.utils.Bipf
 import nz.scuttlebutt.tremolavossbol.utils.Bipf.Companion.BIPF_LIST
 import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_IAM
-import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_TEXTANDVOICE
 import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_KANBAN
+import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_TEXTANDVOICE
 import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toBase64
 import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toHex
 import nz.scuttlebutt.tremolavossbol.utils.PlusCodesUtils
 import okhttp3.internal.wait
 import org.json.JSONArray
+import org.json.JSONObject
 
 
 // pt 3 in https://betterprogramming.pub/5-android-webview-secrets-you-probably-didnt-know-b23f8a8b5a0c
@@ -48,10 +46,9 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
     )
     fun getCurrentLocation(): String {
         val locationClient = LocationServices.getFusedLocationProviderClient(act)
-        val priority = Priority.PRIORITY_BALANCED_POWER_ACCURACY
         val location = JSONObject()
 
-        locationClient.getCurrentLocation(priority, CancellationTokenSource().token)
+        locationClient.getCurrentLocation(102, CancellationTokenSource().token)
             .addOnSuccessListener { fetchedLocation ->
                  location.put("latitude", fetchedLocation.latitude)
                  location.put("longitude", fetchedLocation.longitude)
