@@ -62,6 +62,20 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
     }
 
     @JavascriptInterface
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION],
+    )
+    fun getCurrentLocationAsPlusCode(): String {
+        val locationClient = LocationServices.getFusedLocationProviderClient(act)
+        var plusCode = ""
+        locationClient.getCurrentLocation(102, CancellationTokenSource().token)
+            .addOnSuccessListener { fetchedLocation ->
+                plusCode = PlusCodesUtils.encode(fetchedLocation.latitude, fetchedLocation.longitude)
+            }.wait()
+        return plusCode
+    }
+
+    @JavascriptInterface
     fun getCoordinatesForPlusCode(code: String): String {
         val (latitude, longitude) = PlusCodesUtils.decode(code)
         return JSONObject()
