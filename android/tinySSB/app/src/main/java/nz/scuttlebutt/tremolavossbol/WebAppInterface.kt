@@ -11,7 +11,11 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat.checkSelfPermission
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.zxing.integration.android.IntentIntegrator
 import org.json.JSONObject
 
@@ -23,6 +27,7 @@ import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_TEXTA
 import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_KANBAN
 import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toBase64
 import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toHex
+import okhttp3.internal.wait
 import org.json.JSONArray
 
 
@@ -32,6 +37,26 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
 
     var frontend_ready = false
     val frontend_frontier = act.getSharedPreferences("frontend_frontier", Context.MODE_PRIVATE)
+
+    /**
+     * Retrieves the current geolocation of the Android device and returns it as a JSON-String.
+     */
+    @JavascriptInterface
+    @RequiresPermission(
+        anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION],
+    )
+    fun getCurrentLocation(): String {
+        val locationClient = LocationServices.getFusedLocationProviderClient(act)
+        val priority = Priority.PRIORITY_BALANCED_POWER_ACCURACY
+        val location = JSONObject()
+
+        locationClient.getCurrentLocation(priority, CancellationTokenSource().token)
+            .addOnSuccessListener { fetchedLocation ->
+                 location.put("latitude", fetchedLocation.latitude)
+                 location.put("longitude", fetchedLocation.longitude)
+            }.wait()
+        return location.toString()
+    }
 
     @JavascriptInterface
     fun onFrontendRequest(s: String) {
