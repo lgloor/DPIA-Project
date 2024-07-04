@@ -25,7 +25,6 @@ import nz.scuttlebutt.tremolavossbol.utils.Constants.Companion.TINYSSB_APP_TEXTA
 import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toBase64
 import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toHex
 import nz.scuttlebutt.tremolavossbol.utils.PlusCodesUtils
-import okhttp3.internal.wait
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -47,12 +46,28 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
     fun getCurrentLocationAsPlusCode(): String {
         val locationClient = LocationServices.getFusedLocationProviderClient(act)
 
-        val task = locationClient.getCurrentLocation(102, CancellationTokenSource().token)
-        while (!task.isComplete) {
+        val currentLocationTask = locationClient.getCurrentLocation(102, CancellationTokenSource().token)
+        while (!currentLocationTask.isComplete) {
             // wait for the task to complete
         }
-        val location = task.result
-        return PlusCodesUtils.encode(location.latitude, location.longitude)
+
+        if (currentLocationTask.isSuccessful){
+            val location = currentLocationTask.result
+            return PlusCodesUtils.encode(location.latitude, location.longitude)
+        }
+
+        val lastLocationTask = locationClient.lastLocation
+        while (!lastLocationTask.isComplete) {
+            // wait for the task to complete
+        }
+
+        if (lastLocationTask.isSuccessful){
+            val location = lastLocationTask.result
+            return PlusCodesUtils.encode(location.latitude, location.longitude)
+        }
+
+        Log.e("WebAppInterface", "Failed to get location: ${lastLocationTask.exception}")
+        return ""
     }
 
     @JavascriptInterface

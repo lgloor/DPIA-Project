@@ -295,7 +295,8 @@ function new_text_post(s) {
     var geoLoc = ""
     if (geoLocEnabled){ //ony add if enabled
         var plusCode = Android.getCurrentLocationAsPlusCode();
-        geoLoc = "pfx:loc/plus," + plusCode + "|";
+        if (plusCode != null && plusCode.length > 0)
+            geoLoc = "pfx:loc/plus," + plusCode + "|";
     }
     var draft = unicodeStringToTypedArray(geoLoc + document.getElementById('draft').value); // escapeHTML(
     var recps;
