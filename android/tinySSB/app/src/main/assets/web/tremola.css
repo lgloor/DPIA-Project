@@ -98,10 +98,10 @@ textarea {
 .geo-menu-overlay {
   display: none;
   position: absolute;
-  left: 50%; /* Center relative to the parent element */
+  left: 50%;
   top: 20%;
-  transform: translateX(-50%); /* Shift it back by half its own width */
-  width: auto; /* Adjust the width as needed */
+  transform: translateX(-50%);
+  width: auto;
   max-width: 90%;
   min-width: 70%;
   background: #fff;

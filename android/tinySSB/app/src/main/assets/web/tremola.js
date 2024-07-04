@@ -366,8 +366,7 @@ function copyToClipboard(text) {
 }
 
 function showGeoMenu(plusCode) {
-    closeOverlay()
-    console.log("entered showGeoMenu");
+    closeOverlay();
     var latLongString = Android.getCoordinatesForPlusCode(plusCode);
     var latLong = JSON.parse(latLongString);
     var LatitudeLongitude = latLong.latitude + " " + latLong.longitude;
@@ -384,7 +383,7 @@ function showGeoMenu(plusCode) {
 }
 
 function showGeoVoiceMenu(plusCode, chat, key) {
-    console.log("entered showGeoVoiceMenu");
+    closeOverlay();
     var latLongString = Android.getCoordinatesForPlusCode(plusCode);
     var latLong = JSON.parse(latLongString);
     var LatitudeLongitude = latLong.latitude + " " + latLong.longitude;
