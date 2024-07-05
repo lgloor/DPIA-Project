@@ -64,28 +64,6 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
             }
         }
 
-//        val currentLocationTask = locationClient.getCurrentLocation(102, CancellationTokenSource().token)
-//        while (!currentLocationTask.isComplete) {
-//            // wait for the task to complete
-//        }
-//
-//        if (currentLocationTask.isSuccessful){
-//            val location = currentLocationTask.result
-//            return PlusCodesUtils.encode(location.latitude, location.longitude)
-//        }
-//
-//        val lastLocationTask = locationClient.lastLocation
-//        while (!lastLocationTask.isComplete) {
-//            // wait for the task to complete
-//        }
-//
-//        if (lastLocationTask.isSuccessful){
-//            val location = lastLocationTask.result
-//            return PlusCodesUtils.encode(location.latitude, location.longitude)
-//        }
-//
-//        Log.e("WebAppInterface", "Failed to get location: ${lastLocationTask.exception}")
-//        return ""
     }
 
     @JavascriptInterface
