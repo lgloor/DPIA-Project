@@ -59,6 +59,7 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
                 val lastLocation = Tasks.await(lastLocationTast, 2, TimeUnit.SECONDS)
                 return PlusCodesUtils.encode(lastLocation.latitude, lastLocation.longitude)
             } catch (e: Exception) {
+                Toast.makeText(act, "Failed to get location. Location is not sent with this message.", Toast.LENGTH_LONG).show()
                 return ""
             }
         }
