@@ -405,7 +405,8 @@ async function sketch_getImage() {
     var geoLoc = ""
     if (geoLocEnabled){ //ony add if enabled
         var plusCode = Android.getCurrentLocationAsPlusCode();
-        geoLoc = "pfx:loc/plus," + plusCode + "|";
+        if (plusCode != null && plusCode.length > 0) //check if we actually received a location
+            geoLoc = "pfx:loc/plus," + plusCode + "|";
     }
     var shortenedDataURL = geoLoc + 'data:image/png;base64,' + compressedBase64;
 

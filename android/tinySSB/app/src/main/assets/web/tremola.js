@@ -295,7 +295,7 @@ function new_text_post(s) {
     var geoLoc = ""
     if (geoLocEnabled){ //ony add if enabled
         var plusCode = Android.getCurrentLocationAsPlusCode();
-        if (plusCode != null && plusCode.length > 0)
+        if (plusCode != null && plusCode.length > 0) //check if we actually received a location
             geoLoc = "pfx:loc/plus," + plusCode + "|";
     }
     var draft = unicodeStringToTypedArray(geoLoc + document.getElementById('draft').value); // escapeHTML(
@@ -327,7 +327,8 @@ function new_voice_post(voice_b64) {
     var geoLoc = ""
     if (geoLocEnabled){ //ony add if enabled
         var plusCode = Android.getCurrentLocationAsPlusCode();
-        geoLoc = "pfx:loc/plus," + plusCode + "|";
+        if (plusCode != null && plusCode.length > 0) //check if we actually received a location
+            geoLoc = "pfx:loc/plus," + plusCode + "|";
     }
     var draft = unicodeStringToTypedArray(geoLoc + document.getElementById('draft').value); // escapeHTML(
     if (draft.length == 0)
