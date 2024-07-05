@@ -16,6 +16,7 @@ import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.Tasks
 import com.google.zxing.integration.android.IntentIntegrator
 import nz.scuttlebutt.tremolavossbol.utils.Bipf
 import nz.scuttlebutt.tremolavossbol.utils.Bipf.Companion.BIPF_LIST
@@ -27,6 +28,8 @@ import nz.scuttlebutt.tremolavossbol.utils.HelperFunctions.Companion.toHex
 import nz.scuttlebutt.tremolavossbol.utils.PlusCodesUtils
 import org.json.JSONArray
 import org.json.JSONObject
+import java.sql.Time
+import java.util.concurrent.TimeUnit
 
 
 // pt 3 in https://betterprogramming.pub/5-android-webview-secrets-you-probably-didnt-know-b23f8a8b5a0c
@@ -46,28 +49,42 @@ class WebAppInterface(val act: MainActivity, val webView: WebView) {
     fun getCurrentLocationAsPlusCode(): String {
         val locationClient = LocationServices.getFusedLocationProviderClient(act)
 
-        val currentLocationTask = locationClient.getCurrentLocation(102, CancellationTokenSource().token)
-        while (!currentLocationTask.isComplete) {
-            // wait for the task to complete
+        try {
+            val currentLocationTask = locationClient.getCurrentLocation(102, CancellationTokenSource().token)
+            val currentLocation = Tasks.await(currentLocationTask, 2, TimeUnit.SECONDS)
+            return PlusCodesUtils.encode(currentLocation.latitude, currentLocation.longitude)
+        } catch (e: Exception) {
+            val lastLocationTast = locationClient.lastLocation
+            try {
+                val lastLocation = Tasks.await(lastLocationTast, 2, TimeUnit.SECONDS)
+                return PlusCodesUtils.encode(lastLocation.latitude, lastLocation.longitude)
+            } catch (e: Exception) {
+                return ""
+            }
         }
 
-        if (currentLocationTask.isSuccessful){
-            val location = currentLocationTask.result
-            return PlusCodesUtils.encode(location.latitude, location.longitude)
-        }
-
-        val lastLocationTask = locationClient.lastLocation
-        while (!lastLocationTask.isComplete) {
-            // wait for the task to complete
-        }
-
-        if (lastLocationTask.isSuccessful){
-            val location = lastLocationTask.result
-            return PlusCodesUtils.encode(location.latitude, location.longitude)
-        }
-
-        Log.e("WebAppInterface", "Failed to get location: ${lastLocationTask.exception}")
-        return ""
+//        val currentLocationTask = locationClient.getCurrentLocation(102, CancellationTokenSource().token)
+//        while (!currentLocationTask.isComplete) {
+//            // wait for the task to complete
+//        }
+//
+//        if (currentLocationTask.isSuccessful){
+//            val location = currentLocationTask.result
+//            return PlusCodesUtils.encode(location.latitude, location.longitude)
+//        }
+//
+//        val lastLocationTask = locationClient.lastLocation
+//        while (!lastLocationTask.isComplete) {
+//            // wait for the task to complete
+//        }
+//
+//        if (lastLocationTask.isSuccessful){
+//            val location = lastLocationTask.result
+//            return PlusCodesUtils.encode(location.latitude, location.longitude)
+//        }
+//
+//        Log.e("WebAppInterface", "Failed to get location: ${lastLocationTask.exception}")
+//        return ""
     }
 
     @JavascriptInterface
